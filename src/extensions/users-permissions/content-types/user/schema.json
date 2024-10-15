@@ -88,6 +88,12 @@
       "relation": "manyToMany",
       "target": "api::review.review",
       "mappedBy": "users_permissions_users"
+    },
+    "wishlists": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::wishlist.wishlist",
+      "mappedBy": "users_permissions_users"
     }
   }
 }
