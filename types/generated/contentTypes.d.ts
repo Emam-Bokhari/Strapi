@@ -1,5 +1,57 @@
 import type { Struct, Schema } from '@strapi/strapi';
 
+export interface ApiProductProduct extends Struct.CollectionTypeSchema {
+  collectionName: 'products';
+  info: {
+    singularName: 'product';
+    pluralName: 'products';
+    displayName: 'product';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    slug: Schema.Attribute.UID;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    category: Schema.Attribute.Enumeration<
+      [
+        'Electronics,',
+        'Fashion,',
+        'Home & Kitchen,',
+        'Beauty & Personal Care,',
+        'Sports & Outdoors,',
+        'Books & Stationery,',
+        'Health & Wellness,',
+        'Toys & Games,',
+        'Baby & Kids,',
+        'Jewelry & Accessories',
+      ]
+    > &
+      Schema.Attribute.Required;
+    price: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
+    description: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    stock: Schema.Attribute.BigInteger & Schema.Attribute.DefaultTo<'0'>;
+    images: Schema.Attribute.Media<'images' | 'files', true> &
+      Schema.Attribute.Required;
+    rating: Schema.Attribute.Decimal;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product.product'
+    >;
+  };
+}
+
 export interface PluginUploadFile extends Struct.CollectionTypeSchema {
   collectionName: 'files';
   info: {
@@ -850,6 +902,7 @@ export interface AdminTransferTokenPermission
 declare module '@strapi/strapi' {
   export module Public {
     export interface ContentTypeSchemas {
+      'api::product.product': ApiProductProduct;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
