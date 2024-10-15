@@ -30,6 +30,37 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'orders';
+  info: {
+    singularName: 'order';
+    pluralName: 'orders';
+    displayName: 'order';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    totalPrice: Schema.Attribute.Float & Schema.Attribute.DefaultTo<0>;
+    shipping_address: Schema.Attribute.Text & Schema.Attribute.Required;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
+  };
+}
+
 export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   collectionName: 'products';
   info: {
@@ -59,18 +90,19 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       ]
     > &
       Schema.Attribute.Required;
-    price: Schema.Attribute.Decimal &
+    price: Schema.Attribute.Float &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<0>;
     description: Schema.Attribute.Blocks & Schema.Attribute.Required;
     stock: Schema.Attribute.BigInteger & Schema.Attribute.DefaultTo<'0'>;
     images: Schema.Attribute.Media<'images' | 'files', true> &
       Schema.Attribute.Required;
-    rating: Schema.Attribute.Decimal;
+    rating: Schema.Attribute.Float;
     categories: Schema.Attribute.Relation<
       'manyToOne',
       'api::category.category'
     >;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -556,6 +588,7 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -937,6 +970,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ContentTypeSchemas {
       'api::category.category': ApiCategoryCategory;
+      'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;

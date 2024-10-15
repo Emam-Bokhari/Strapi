@@ -36,7 +36,7 @@
       "required": true
     },
     "price": {
-      "type": "decimal",
+      "type": "float",
       "required": true,
       "default": 0
     },
@@ -58,12 +58,18 @@
       ]
     },
     "rating": {
-      "type": "decimal"
+      "type": "float"
     },
     "categories": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::category.category",
+      "inversedBy": "products"
+    },
+    "order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order.order",
       "inversedBy": "products"
     }
   }
