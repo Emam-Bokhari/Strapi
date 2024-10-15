@@ -472,6 +472,7 @@ export interface PluginUsersPermissionsUser
     orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
     cart: Schema.Attribute.Relation<'manyToOne', 'api::cart.cart'>;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
+    reviews: Schema.Attribute.Relation<'manyToMany', 'api::review.review'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -656,6 +657,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     >;
     order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
     cart: Schema.Attribute.Relation<'manyToOne', 'api::cart.cart'>;
+    reviews: Schema.Attribute.Relation<'manyToMany', 'api::review.review'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -668,6 +670,36 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::product.product'
     >;
+  };
+}
+
+export interface ApiReviewReview extends Struct.CollectionTypeSchema {
+  collectionName: 'reviews';
+  info: {
+    singularName: 'review';
+    pluralName: 'reviews';
+    displayName: 'review';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    users_permissions_users: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    products: Schema.Attribute.Relation<'manyToMany', 'api::product.product'>;
+    rating: Schema.Attribute.Float;
+    comment: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
   };
 }
 
@@ -1051,6 +1083,7 @@ declare module '@strapi/strapi' {
       'api::order.order': ApiOrderOrder;
       'api::payment.payment': ApiPaymentPayment;
       'api::product.product': ApiProductProduct;
+      'api::review.review': ApiReviewReview;
       'admin::permission': AdminPermission;
       'admin::user': AdminUser;
       'admin::role': AdminRole;

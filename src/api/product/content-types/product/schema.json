@@ -77,6 +77,12 @@
       "relation": "manyToOne",
       "target": "api::cart.cart",
       "inversedBy": "products"
+    },
+    "reviews": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::review.review",
+      "mappedBy": "products"
     }
   }
 }
