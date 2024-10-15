@@ -9,7 +9,7 @@
     "displayName": "User"
   },
   "options": {
-    "timestamps": true
+    "draftAndPublish": false
   },
   "attributes": {
     "username": {
@@ -69,6 +69,18 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::order.order",
+      "mappedBy": "users_permissions_user"
+    },
+    "cart": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cart.cart",
+      "inversedBy": "users"
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
       "mappedBy": "users_permissions_user"
     }
   }

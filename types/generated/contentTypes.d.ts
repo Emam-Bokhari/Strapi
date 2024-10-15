@@ -1,123 +1,5 @@
 import type { Struct, Schema } from '@strapi/strapi';
 
-export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
-  collectionName: 'categories';
-  info: {
-    singularName: 'category';
-    pluralName: 'categories';
-    displayName: 'category';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    description: Schema.Attribute.Text;
-    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::category.category'
-    >;
-  };
-}
-
-export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
-  collectionName: 'orders';
-  info: {
-    singularName: 'order';
-    pluralName: 'orders';
-    displayName: 'order';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    totalPrice: Schema.Attribute.Float & Schema.Attribute.DefaultTo<0>;
-    shipping_address: Schema.Attribute.Text & Schema.Attribute.Required;
-    users_permissions_user: Schema.Attribute.Relation<
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
-    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
-  };
-}
-
-export interface ApiProductProduct extends Struct.CollectionTypeSchema {
-  collectionName: 'products';
-  info: {
-    singularName: 'product';
-    pluralName: 'products';
-    displayName: 'product';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    slug: Schema.Attribute.UID;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    category: Schema.Attribute.Enumeration<
-      [
-        'Electronics,',
-        'Fashion,',
-        'Home & Kitchen,',
-        'Beauty & Personal Care,',
-        'Sports & Outdoors,',
-        'Books & Stationery,',
-        'Health & Wellness,',
-        'Toys & Games,',
-        'Baby & Kids,',
-        'Jewelry & Accessories',
-      ]
-    > &
-      Schema.Attribute.Required;
-    price: Schema.Attribute.Float &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<0>;
-    description: Schema.Attribute.Blocks & Schema.Attribute.Required;
-    stock: Schema.Attribute.BigInteger & Schema.Attribute.DefaultTo<'0'>;
-    images: Schema.Attribute.Media<'images' | 'files', true> &
-      Schema.Attribute.Required;
-    rating: Schema.Attribute.Float;
-    categories: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::category.category'
-    >;
-    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
-    createdAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    publishedAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::product.product'
-    >;
-  };
-}
-
 export interface PluginUploadFile extends Struct.CollectionTypeSchema {
   collectionName: 'files';
   info: {
@@ -559,7 +441,6 @@ export interface PluginUsersPermissionsUser
     displayName: 'User';
   };
   options: {
-    timestamps: true;
     draftAndPublish: false;
   };
   attributes: {
@@ -589,6 +470,8 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.role'
     >;
     orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
+    cart: Schema.Attribute.Relation<'manyToOne', 'api::cart.cart'>;
+    payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -600,6 +483,190 @@ export interface PluginUsersPermissionsUser
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiCartCart extends Struct.CollectionTypeSchema {
+  collectionName: 'carts';
+  info: {
+    singularName: 'cart';
+    pluralName: 'carts';
+    displayName: 'cart';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    total_price: Schema.Attribute.Float;
+    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
+    users: Schema.Attribute.Relation<
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    quantity: Schema.Attribute.Integer;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::cart.cart'>;
+  };
+}
+
+export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
+  collectionName: 'categories';
+  info: {
+    singularName: 'category';
+    pluralName: 'categories';
+    displayName: 'category';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    description: Schema.Attribute.Text;
+    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::category.category'
+    >;
+  };
+}
+
+export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'orders';
+  info: {
+    singularName: 'order';
+    pluralName: 'orders';
+    displayName: 'order';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    totalPrice: Schema.Attribute.Float & Schema.Attribute.DefaultTo<0>;
+    shipping_address: Schema.Attribute.Text & Schema.Attribute.Required;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    products: Schema.Attribute.Relation<'oneToMany', 'api::product.product'>;
+    payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
+  };
+}
+
+export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
+  collectionName: 'payments';
+  info: {
+    singularName: 'payment';
+    pluralName: 'payments';
+    displayName: 'payment';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
+    payment_method: Schema.Attribute.String;
+    payment_status: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment.payment'
+    >;
+  };
+}
+
+export interface ApiProductProduct extends Struct.CollectionTypeSchema {
+  collectionName: 'products';
+  info: {
+    singularName: 'product';
+    pluralName: 'products';
+    displayName: 'product';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    slug: Schema.Attribute.UID;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    category: Schema.Attribute.Enumeration<
+      [
+        'Electronics,',
+        'Fashion,',
+        'Home & Kitchen,',
+        'Beauty & Personal Care,',
+        'Sports & Outdoors,',
+        'Books & Stationery,',
+        'Health & Wellness,',
+        'Toys & Games,',
+        'Baby & Kids,',
+        'Jewelry & Accessories',
+      ]
+    > &
+      Schema.Attribute.Required;
+    price: Schema.Attribute.Float &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
+    description: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    stock: Schema.Attribute.BigInteger & Schema.Attribute.DefaultTo<'0'>;
+    images: Schema.Attribute.Media<'images' | 'files', true> &
+      Schema.Attribute.Required;
+    rating: Schema.Attribute.Float;
+    categories: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::category.category'
+    >;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
+    cart: Schema.Attribute.Relation<'manyToOne', 'api::cart.cart'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product.product'
     >;
   };
 }
@@ -969,9 +1036,6 @@ export interface AdminTransferTokenPermission
 declare module '@strapi/strapi' {
   export module Public {
     export interface ContentTypeSchemas {
-      'api::category.category': ApiCategoryCategory;
-      'api::order.order': ApiOrderOrder;
-      'api::product.product': ApiProductProduct;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
@@ -982,6 +1046,11 @@ declare module '@strapi/strapi' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::cart.cart': ApiCartCart;
+      'api::category.category': ApiCategoryCategory;
+      'api::order.order': ApiOrderOrder;
+      'api::payment.payment': ApiPaymentPayment;
+      'api::product.product': ApiProductProduct;
       'admin::permission': AdminPermission;
       'admin::user': AdminUser;
       'admin::role': AdminRole;

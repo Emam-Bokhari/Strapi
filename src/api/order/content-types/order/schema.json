@@ -31,6 +31,12 @@
       "relation": "oneToMany",
       "target": "api::product.product",
       "mappedBy": "order"
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "order"
     }
   }
 }
