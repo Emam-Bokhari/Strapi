@@ -492,6 +492,33 @@ export interface PluginUsersPermissionsUser
   };
 }
 
+export interface ApiAdminAdmin extends Struct.CollectionTypeSchema {
+  collectionName: 'admins';
+  info: {
+    singularName: 'admin';
+    pluralName: 'admins';
+    displayName: 'admin';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    total_sales: Schema.Attribute.Float;
+    total_orders: Schema.Attribute.BigInteger;
+    total_customers: Schema.Attribute.BigInteger;
+    monthly_sales: Schema.Attribute.Float;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::admin.admin'>;
+  };
+}
+
 export interface ApiCartCart extends Struct.CollectionTypeSchema {
   collectionName: 'carts';
   info: {
@@ -1114,6 +1141,7 @@ declare module '@strapi/strapi' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::admin.admin': ApiAdminAdmin;
       'api::cart.cart': ApiCartCart;
       'api::category.category': ApiCategoryCategory;
       'api::order.order': ApiOrderOrder;

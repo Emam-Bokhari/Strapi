@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "admins",
+  "info": {
+    "singularName": "admin",
+    "pluralName": "admins",
+    "displayName": "admin"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "total_sales": {
+      "type": "float"
+    },
+    "total_orders": {
+      "type": "biginteger"
+    },
+    "total_customers": {
+      "type": "biginteger"
+    },
+    "monthly_sales": {
+      "type": "float"
+    }
+  }
+}
